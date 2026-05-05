@@ -92,7 +92,7 @@ _source.monitoring.operationFilter            string   "PURCHASE" | "WTHDMON" | 
 _source.monitoring.transactionTypeDescription string   "COMPRAS" | "RETIROS" | ...
 _source.monitoring.countryDate                datetime ISO8601 con timezone "-05:00" ← campo principal de fecha
 _source.monitoring.transactionStatus          string   "Approved" | "Denied" | (ausente=sin respuesta)
-_source.monitoring.p2p                        string   "PLIN" | "YAPE" | null
+_source.monitoring.p2pType                     string   "PLIN" | "YAPE" | null
 _source.monitoring.merchantCategoryDescription string   "GASOLINERAS" | "SUPERMERCADOS" | ...
 
 # ── CUSTOM DATA LOCAL ─────────────────────────────────────────────────────
@@ -138,7 +138,7 @@ _source.transaction.transactionId.transmissionDateTime    datetime UTC
 _source.transaction.transactionId.systemTraceAuditNumber  string   STAN "392869"
 _source.transaction.transactionId.localDateTime           datetime local
 _source.transaction.transactionId.retrievalReferenceNumber string  RRN "000011361465"
-_source.transaction.transactionType                       string   "00"=compra, "01"=retiro
+_source.transaction.transactionType                       string   "00"=compra, "01"=retiro, "10"=AFT , "26"=OCT
 _source.transaction.accountFrom.accountType               string   "00"
 _source.transaction.accountTo.accountType                 string   "00"
 
