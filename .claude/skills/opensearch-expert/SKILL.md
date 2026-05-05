@@ -14,6 +14,7 @@ Antes de generar cualquier query, leer obligatoriamente estos archivos en orden:
 2. `context/valores-descubiertos.md` — Valores de campos encontrados en producción que pueden no estar en el esquema base.
 3. `context/errores-comunes.md` — Errores conocidos que se deben evitar al construir la query.
 4. `doc/codigos-respuesta.md` — Referencia completa de códigos de respuesta por red. **Leer siempre que la query involucre resultados, rechazos o tipos de error.**
+5. `doc/application-data.md` — Referencia de BINs, monedas, MCC y entidades P2P. **Leer cuando la query involucre productos de tarjeta, BIN, tipo de comercio (MCC), moneda o entidades de billetera.**
 
 ---
 
@@ -91,6 +92,8 @@ _source.monitoring.operationFilter            string   "PURCHASE" | "WTHDMON" | 
 _source.monitoring.transactionTypeDescription string   "COMPRAS" | "RETIROS" | ...
 _source.monitoring.countryDate                datetime ISO8601 con timezone "-05:00" ← campo principal de fecha
 _source.monitoring.transactionStatus          string   "Approved" | "Denied" | (ausente=sin respuesta)
+_source.monitoring.p2p                        string   "PLIN" | "YAPE" | null
+_source.monitoring.merchantCategoryDescription string   "GASOLINERAS" | "SUPERMERCADOS" | ...
 
 # ── CUSTOM DATA LOCAL ─────────────────────────────────────────────────────
 _source.customDataLocal.additionalData[].request.key    string  "MSGTYPE"

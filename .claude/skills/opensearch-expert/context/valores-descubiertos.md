@@ -70,6 +70,19 @@
 | `Approved` | Transacción aprobada |
 | `Denied` | Transacción denegada (NO usar "Declined") |
 
+### monitoring.channelFilter — valor para billeteras
+| Valor | Significado |
+|-------|-------------|
+| `P2PP` | Todas las billeteras digitales P2P (PLIN, YAPE, etc.) |
+
+### p2pType — tipo de billetera P2P
+| Valor | Significado |
+|-------|-------------|
+| `PLIN` | Billetera PLIN |
+| `YAPE` | Billetera YAPE |
+
+> ⚠️ Para billeteras NO usar `monitoring.merchantNameAceptor`. Usar `p2pType` para una billetera específica o `monitoring.channelFilter: "P2PP"` para todas.
+
 ---
 
 <!-- NUEVOS VALORES AQUÍ — agregar manualmente o con /opensearch-save -->

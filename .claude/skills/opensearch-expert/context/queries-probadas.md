@@ -188,4 +188,43 @@ POST /peer01/_search
 
 ---
 
+## [QPR-006] Operaciones de billetera PLIN
+
+**Descripción:** Recupera transacciones de la billetera digital PLIN filtrando por el campo `p2pType`.  
+**Cuándo usar:** Soporte operativo de billeteras, monitoreo de PLIN, análisis de transacciones P2P.
+
+```json
+POST /peer01/_search
+{
+  "size": 100,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "p2pType.keyword": "PLIN"
+          }
+        },
+        {
+          "range": {
+            "monitoring.countryDate": {
+              "gte": "now/d",
+              "lte": "now",
+              "time_zone": "-05:00"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    { "monitoring.countryDate": "desc" }
+  ]
+}
+```
+
+**Notas:** Usar `p2pType.keyword` y NO `monitoring.merchantNameAceptor` para identificar billeteras (EC-007). Para YAPE cambiar el valor a `"YAPE"`. Para todas las billeteras usar `monitoring.channelFilter.keyword: "P2PP"`.
+
+---
+
 <!-- NUEVAS QUERIES AQUÍ — el comando /opensearch-save las agrega automáticamente -->

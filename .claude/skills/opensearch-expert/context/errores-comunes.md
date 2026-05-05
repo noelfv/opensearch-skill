@@ -119,4 +119,26 @@
 
 ---
 
+## [EC-007] Buscar billeteras PLIN/YAPE por merchantNameAceptor
+
+**Error:**
+```json
+"match_phrase": { "monitoring.merchantNameAceptor": "PLIN" }
+```
+
+**Correcto — por billetera específica:**
+```json
+"term": { "p2pType.keyword": "PLIN" }
+"term": { "p2pType.keyword": "YAPE" }
+```
+
+**Correcto — todas las billeteras P2P:**
+```json
+"term": { "monitoring.channelFilter.keyword": "P2PP" }
+```
+
+**Por qué:** Las transacciones de billetera no se identifican por el nombre del comercio sino por el campo `p2pType`. Para obtener todas las billeteras sin importar el tipo, usar `channelFilter: "P2PP"`.
+
+---
+
 <!-- NUEVOS ERRORES AQUÍ — agregar cuando el equipo encuentre uno nuevo -->
