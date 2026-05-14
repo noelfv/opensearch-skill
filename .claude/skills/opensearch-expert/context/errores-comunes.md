@@ -142,3 +142,17 @@
 ---
 
 <!-- NUEVOS ERRORES AQUÍ — agregar cuando el equipo encuentre uno nuevo -->
+
+## [EC-008] Usar peer01 para BINs de Mastercard (y viceversa)
+
+**Error:** Consultar un BIN de Mastercard en el índice de Visa (o al revés).
+
+**Regla:**
+| Red | Índice | Marca | BINs ejemplo |
+|-----|--------|-------|--------------|
+| PEER01 | `peer01` | Visa | `491914`, `414064`, `477113`... |
+| PEER02 | `peer02` | Mastercard | `511578`, `512312`, `553650`... |
+
+**Por qué:** Cada red almacena sus transacciones en su propio índice. Un BIN de Mastercard nunca aparecerá en `peer01`. Siempre verificar el BIN en `doc/application-data.md` antes de elegir el índice.
+
+**Cómo identificar rápido:** BINs que empiezan con `5` generalmente son Mastercard → `peer02`. BINs que empiezan con `4` generalmente son Visa → `peer01`.

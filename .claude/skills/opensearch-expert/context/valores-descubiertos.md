@@ -86,3 +86,15 @@
 ---
 
 <!-- NUEVOS VALORES AQUÍ — agregar manualmente o con /opensearch-save -->
+
+## environment.card.pan — PAN enmascarado de la tarjeta
+**Campo:** `environment.card.pan`  
+**Formato:** `553650******9713` (primeros 6 + asteriscos + últimos 4)  
+**Búsqueda exacta:** usar `term` con `.keyword`  
+**Búsqueda por últimos 4:** usar `wildcard`  
+**Ejemplos:**
+```json
+"term": { "environment.card.pan.keyword": "553650******9713" }
+"wildcard": { "environment.card.pan.keyword": "*9713" }
+```
+**Descubierto:** 2026-05-14 — estructura ISO20022, path completo confirmado por el equipo.

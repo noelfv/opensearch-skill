@@ -228,3 +228,45 @@ POST /peer01/_search
 ---
 
 <!-- NUEVAS QUERIES AQUÍ — el comando /opensearch-save las agrega automáticamente -->
+
+## [QPR-007] Buscar operaciones por PAN de tarjeta específica
+
+**Descripción:** Filtra todas las transacciones de una tarjeta específica por su PAN enmascarado en un rango de fechas.  
+**Cuándo usar:** Soporte operativo, investigación de operaciones de un cliente específico.  
+**Red:** PEER02 (Mastercard) — BIN `553650` = Mastercard BLACK.
+
+```json
+POST /peer02/_search
+{
+  "size": 100,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "environment.card.pan.keyword": "553650******9713"
+          }
+        },
+        {
+          "range": {
+            "monitoring.countryDate": {
+              "gte": "2026-04-11T00:00:00",
+              "lte": "2026-04-12T23:59:59",
+              "time_zone": "-05:00"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    { "monitoring.countryDate": "asc" }
+  ]
+}
+```
+
+**Notas:**
+- Campo del PAN: `environment.card.pan.keyword` — siempre con `.keyword` para exact match (EC-002).
+- BINs que empiezan con `5` son Mastercard → `peer02`. BINs con `4` son Visa → `peer01` (EC-008).
+- Para buscar solo por últimos 4 dígitos usar `wildcard`: `{ "environment.card.pan.keyword": "*9713" }`
+- Ajustar `gte`/`lte` según el período requerido.

@@ -109,8 +109,6 @@ _source.addendumData.additionalData[].value    string   string  "0110"=auth resp
 # ── ENVIRONMENT ───────────────────────────────────────────────────────────
 _source.environment.terminal.terminalId.id           string  "00000023"
 _source.environment.terminal.terminalId.country      string  código país ISO (ej: "840"=USA)
-_source.environment.terminal.capabilities.cardCaptureCapable  boolean
-
 _source.environment.acquirer.id                      string  ID del adquirente "007778"
 _source.environment.acquirer.country                 string
 
@@ -121,8 +119,8 @@ _source.environment.sender.additionalId.value        string  "C8"
 _source.environment.acceptor.id                      string  ID del comercio "000498763010887"
 _source.environment.acceptor.nameAndLocation         string  nombre + ciudad + país
 _source.environment.acceptor.localData.address.postalCode string
-
-_source.environment.issuer.assigner                  string  emisor
+_source.environment.card.pan                         string   PAN o numero de tarjeta enmascarado  
+_source.environment.issuer.assigner                  string   emisor
 
 # ── CONTEXT ───────────────────────────────────────────────────────────────
 _source.context.transactionContext.merchantCategoryCode          string  MCC "3502"
@@ -134,9 +132,9 @@ _source.context.transactionContext.additionalData[].value        string  valores
 
 # ── TRANSACTION ───────────────────────────────────────────────────────────
 _source.transaction.transactionId.transactionReference    string   UUID
-_source.transaction.transactionId.transmissionDateTime    datetime UTC
-_source.transaction.transactionId.systemTraceAuditNumber  string   STAN "392869"
-_source.transaction.transactionId.localDateTime           datetime local
+_source.transaction.transactionId.transmissionDateTime    datetime fecha de la operacion
+_source.transaction.transactionId.systemTraceAuditNumber  string   numero de operacion 
+_source.transaction.transactionId.localDateTime           datetime fecha y hora local
 _source.transaction.transactionId.retrievalReferenceNumber string  RRN "000011361465"
 _source.transaction.transactionType                       string   "00"=compra, "01"=retiro, "10"=AFT , "26"=OCT
 _source.transaction.accountFrom.accountType               string   "00"
@@ -149,7 +147,7 @@ _source.transaction.transactionAmounts.cardholderBillingAmount.currency        s
 _source.transaction.transactionAmounts.cardholderBillingAmount.effectiveExchangeRate string
 
 # ── PROCESSING RESULT ─────────────────────────────────────────────────────
-_source.processingResult.approvalCode                            string   "555173"
+_source.processingResult.approvalCode                            string   codigo de aprobacion "000000" equivalente al campo 38 del iso 8583
 _source.processingResult.resultData.otherResult                  string   "insufficient_credit_balance" | "card_blocked" | "cancelled_account" | ...
 _source.processingResult.resultData.otherResultDetails           string   relacionado al codigo-respuesta.md : "51"=saldo insuficiente
 _source.processingResult.additionalInformation[].key             string   "transaction"
