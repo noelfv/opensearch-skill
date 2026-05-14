@@ -87,6 +87,24 @@
 
 <!-- NUEVOS VALORES AQUÍ — agregar manualmente o con /opensearch-save -->
 
+## environment.acquirer.country — País del adquirente
+**Campo:** `environment.acquirer.country`  
+**Uso:** Identificar operaciones nacionales vs extranjeras.  
+| Valor | Significado |
+|-------|-------------|
+| `604` | Perú (nacional) |
+| Cualquier otro | Extranjero / internacional |
+
+**Para filtrar internacionales:**
+```json
+"must_not": [
+  { "term": { "environment.acquirer.country.keyword": "604" } }
+]
+```
+**Descubierto:** 2026-05-14 — regla de negocio confirmada por el equipo.
+
+---
+
 ## environment.card.pan — PAN enmascarado de la tarjeta
 **Campo:** `environment.card.pan`  
 **Formato:** `553650******9713` (primeros 6 + asteriscos + últimos 4)  

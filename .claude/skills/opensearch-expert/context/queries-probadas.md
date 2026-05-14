@@ -229,6 +229,89 @@ POST /peer01/_search
 
 <!-- NUEVAS QUERIES AQUÍ — el comando /opensearch-save las agrega automáticamente -->
 
+## [QPR-008] Compras en el extranjero o por país específico
+
+**Descripción:** Filtra compras realizadas fuera de Perú, o en un país específico, usando el código ISO numérico del país adquirente.  
+**Cuándo usar:** Investigación de consumos internacionales, soporte a clientes con compras en el exterior.
+
+**Variante A — Todas las compras en el extranjero (país ≠ 604):**
+```json
+POST /peer*/_search
+{
+  "size": 100,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "monitoring.operationFilter.keyword": "PURCHASE"
+          }
+        },
+        {
+          "range": {
+            "monitoring.countryDate": {
+              "gte": "2026-05-01T00:00:00",
+              "lte": "2026-05-31T23:59:59",
+              "time_zone": "-05:00"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "term": {
+            "environment.acquirer.country.keyword": "604"
+          }
+        }
+      ]
+    }
+  },
+  "sort": [{ "monitoring.countryDate": "desc" }]
+}
+```
+
+**Variante B — Compras en un país específico (ej: Gran Bretaña = 826):**
+```json
+POST /peer*/_search
+{
+  "size": 100,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "monitoring.operationFilter.keyword": "PURCHASE"
+          }
+        },
+        {
+          "term": {
+            "environment.acquirer.country.keyword": "826"
+          }
+        },
+        {
+          "range": {
+            "monitoring.countryDate": {
+              "gte": "2026-05-01T00:00:00",
+              "lte": "2026-05-31T23:59:59",
+              "time_zone": "-05:00"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [{ "monitoring.countryDate": "desc" }]
+}
+```
+
+**Notas:**
+- Campo clave: `environment.acquirer.country` con código ISO numérico (EC-009).
+- `604` = Perú. Para otros países usar el código ISO 3166-1 numérico (ej: `826`=Gran Bretaña, `840`=USA, `032`=Argentina).
+- Internacional = `must_not term 604`. País específico = `filter term <código>`.
+- Ajustar `gte`/`lte` según el período requerido.
+
+---
+
 ## [QPR-007] Buscar operaciones por PAN de tarjeta específica
 
 **Descripción:** Filtra todas las transacciones de una tarjeta específica por su PAN enmascarado en un rango de fechas.  

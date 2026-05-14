@@ -143,6 +143,22 @@
 
 <!-- NUEVOS ERRORES AQUÍ — agregar cuando el equipo encuentre uno nuevo -->
 
+## [EC-009] Usar `merchantCategorySpecificData` para identificar compras internacionales
+
+**Error:**
+```json
+"term": { "context.transactionContext.merchantCategorySpecificData.keyword": "INTERNATIONAL" }
+```
+
+**Correcto:**
+```json
+"must_not": [
+  { "term": { "environment.acquirer.country.keyword": "604" } }
+]
+```
+
+**Por qué:** La regla de negocio correcta para identificar una operación del extranjero es que el país del adquirente (`environment.acquirer.country`) sea diferente a `604` (Perú). El campo `merchantCategorySpecificData` no es el indicador confiable para este caso.
+
 ## [EC-008] Usar peer01 para BINs de Mastercard (y viceversa)
 
 **Error:** Consultar un BIN de Mastercard en el índice de Visa (o al revés).
