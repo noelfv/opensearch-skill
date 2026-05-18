@@ -57,7 +57,7 @@ Si la query usa algún valor de campo que no está en `context/valores-descubier
 Responder con:
 ```
 ✅ Query guardada como [QPR-XXX] en queries-probadas.md
-📁 Disponible para el equipo y sesiones futuras de Claude Code
+📁 Disponible para el equipo y sesiones futuras
 ```
 
 $ARGUMENTS

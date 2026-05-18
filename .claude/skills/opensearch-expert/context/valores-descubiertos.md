@@ -26,6 +26,7 @@
 | `ATM` | Cajero automático |
 | `OTHER` | Otros canales |
 | `ECOMMERCE` | Comercio electrónico |
+| `P2PP` | Billeteras |
 
 ### monitoring.operationFilter
 | Valor | Significado |
@@ -86,6 +87,29 @@
 ---
 
 <!-- NUEVOS VALORES AQUÍ — agregar manualmente o con /opensearch-save -->
+
+## protocolVersion — Origen del BIN de la tarjeta
+**Campo:** `protocolVersion`  
+**Uso:** Identificar si la tarjeta es BBVA o de otro banco (foránea).
+| Valor | Significado |
+|-------|-------------|
+| `BIN_NO_BBVA` | Tarjeta de otro banco (foránea/cliente externo) |
+**Descubierto:** 2026-05-18 — confirmado por el equipo para retiros en cajeros BBVA con tarjetas foráneas.
+
+---
+
+## transaction.transactionType — Tipo de transacción
+**Campo:** `transaction.transactionType`  
+**Uso:** Identificar el tipo de operación a nivel de protocolo.
+| Valor | Significado |
+|-------|-------------|
+| `00` | Compra |
+| `01` | Retiro |
+| `10` | AFT (Account Funding Transaction) |
+| `26` | OCT (Original Credit Transaction) |
+| `30` | Consulta de saldo |
+**Nota:** Para retiros en cajero combinar con `merchantCategoryCode: "6011"` y `protocolVersion: "BIN_NO_BBVA"`.
+**Descubierto:** 2026-05-18 — confirmado por el equipo.
 
 ## environment.acquirer.country — País del adquirente
 **Campo:** `environment.acquirer.country`  

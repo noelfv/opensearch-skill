@@ -229,6 +229,90 @@ POST /peer01/_search
 
 <!-- NUEVAS QUERIES AQUÍ — el comando /opensearch-save las agrega automáticamente -->
 
+## [QPR-009] Retiros de cajero BBVA con tarjetas foráneas (otros bancos)
+
+**Descripción:** Recupera retiros realizados en cajeros BBVA por clientes de otros bancos (tarjetas no BBVA).  
+**Cuándo usar:** Monitoreo de red adquirente, análisis de uso de cajeros por clientes externos, soporte operativo.
+
+```json
+POST /peer01/_search
+{
+  "size": 100,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "transaction.transactionType": "01"
+          }
+        },
+        {
+          "match": {
+            "context.transactionContext.merchantCategoryCode": "6011"
+          }
+        },
+        {
+          "match": {
+            "protocolVersion": "BIN_NO_BBVA"
+          }
+        }
+      ]
+    }
+  },
+  "sort": [{ "monitoring.countryDate": "desc" }]
+}
+```
+
+**Notas:**
+- `transactionType: "01"` = retiro de efectivo.
+- `merchantCategoryCode: "6011"` = MCC estándar para cajeros ATM.
+- `protocolVersion: "BIN_NO_BBVA"` = tarjeta pertenece a otro banco (foránea).
+- NO usar `channelFilter + operationFilter + OWNER=OFFUS` para este caso (EC-010).
+- Agregar filtro de fecha según el período requerido.
+
+---
+
+## [QPR-010] Consulta de saldo en cajeros BBVA con tarjetas foráneas (otros bancos)
+
+**Descripción:** Recupera consultas de saldo realizadas en cajeros BBVA por clientes de otros bancos.  
+**Cuándo usar:** Monitoreo de red adquirente, análisis de uso de cajeros por clientes externos.
+
+```json
+POST /peer01/_search
+{
+  "size": 100,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "transaction.transactionType": "30"
+          }
+        },
+        {
+          "match": {
+            "context.transactionContext.merchantCategoryCode": "6011"
+          }
+        },
+        {
+          "match": {
+            "protocolVersion": "BIN_NO_BBVA"
+          }
+        }
+      ]
+    }
+  },
+  "sort": [{ "monitoring.countryDate": "desc" }]
+}
+```
+
+**Notas:**
+- `transactionType: "30"` = consulta de saldo.
+- `merchantCategoryCode: "6011"` = MCC estándar para cajeros ATM.
+- `protocolVersion: "BIN_NO_BBVA"` = tarjeta de otro banco (foránea).
+- Para retiros usar QPR-009 con `transactionType: "01"`.
+- Agregar filtro de fecha según el período requerido.
+
 ## [QPR-008] Compras en el extranjero o por país específico
 
 **Descripción:** Filtra compras realizadas fuera de Perú, o en un país específico, usando el código ISO numérico del país adquirente.  

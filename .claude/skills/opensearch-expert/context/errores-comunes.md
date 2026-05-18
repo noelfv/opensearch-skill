@@ -143,6 +143,29 @@
 
 <!-- NUEVOS ERRORES AQUÍ — agregar cuando el equipo encuentre uno nuevo -->
 
+## [EC-010] Usar channelFilter + operationFilter + OWNER=OFFUS para retiros de cajero con tarjetas foráneas
+
+**Error:**
+```json
+{ "term": { "monitoring.channelFilter.keyword": "ATM" } },
+{ "term": { "monitoring.operationFilter.keyword": "WTHDMON" } },
+{ "match_phrase": { "context.transactionContext.additionalData.value": "OFFUS" } }
+```
+
+**Correcto:**
+```json
+{ "match": { "transaction.transactionType": "01" } },
+{ "match": { "context.transactionContext.merchantCategoryCode": "6011" } },
+{ "match": { "protocolVersion": "BIN_NO_BBVA" } }
+```
+
+**Por qué:** Para retiros en cajeros BBVA con tarjetas de otros bancos, el patrón correcto combina:
+- `transactionType: "01"` = retiro
+- `merchantCategoryCode: "6011"` = MCC de cajero ATM
+- `protocolVersion: "BIN_NO_BBVA"` = tarjeta foránea (no BBVA)
+
+El campo `OWNER=OFFUS` en additionalData no es el indicador confiable para este caso.
+
 ## [EC-009] Usar `merchantCategorySpecificData` para identificar compras internacionales
 
 **Error:**
