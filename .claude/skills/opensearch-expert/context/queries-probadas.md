@@ -437,3 +437,112 @@ POST /peer02/_search
 - BINs que empiezan con `5` son Mastercard → `peer02`. BINs con `4` son Visa → `peer01` (EC-008).
 - Para buscar solo por últimos 4 dígitos usar `wildcard`: `{ "environment.card.pan.keyword": "*9713" }`
 - Ajustar `gte`/`lte` según el período requerido.
+
+---
+
+## [QPR-011] Mensajes 0110 (auth response) compras en rango horario — Mastercard
+
+**Descripción:** Recupera auth responses (0110) de tipo compra en un rango horario específico, mostrando la trama de requerimiento ISO8583.  
+**Cuándo usar:** Monitoreo operativo, análisis de ventanas horarias, soporte de incidentes.
+
+```json
+POST /peer02/_search
+{
+  "size": 100,
+  "_source": [
+    "customDataLocal.additionalData"
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": {
+            "addendumData.additionalData.key": "UNSP"
+          }
+        },
+        {
+          "match_phrase": {
+            "addendumData.additionalData.value": "0110"
+          }
+        },
+        {
+          "term": {
+            "transaction.transactionType.keyword": "00"
+          }
+        },
+        {
+          "range": {
+            "monitoring.countryDate": {
+              "gte": "2026-06-02T01:00:00",
+              "lte": "2026-06-02T03:00:00",
+              "time_zone": "-05:00"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [{ "monitoring.countryDate": "asc" }]
+}
+```
+
+**Notas:**
+- Filtrar respuestas 0110: `addendumData.additionalData` key=`UNSP` value=`0110` (trama de respuesta — VD-003).
+- Mostrar trama de requerimiento: `_source: ["customDataLocal.additionalData"]` key=`MSGTYPE` (VD-003).
+- `transactionType: "00"` = compra. Cambiar a `"01"` para retiros.
+- Para Visa usar `peer01`. Ajustar `gte`/`lte` al rango horario requerido.
+
+---
+
+## [QPR-012] Mensajes 0100 (auth request) compras en rango horario — Mastercard
+
+**Descripción:** Recupera auth requests (0100) de tipo compra en un rango horario específico, mostrando la trama de respuesta ISO8583.  
+**Cuándo usar:** Monitoreo operativo, análisis de requerimientos enviados en una ventana horaria, soporte de incidentes.
+
+```json
+POST /peer02/_search
+{
+  "size": 100,
+  "_source": [
+    "addendumData.additionalData"
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": {
+            "customDataLocal.additionalData.request.key": "MSGTYPE"
+          }
+        },
+        {
+          "match_phrase": {
+            "customDataLocal.additionalData.request.value": "0100"
+          }
+        },
+        {
+          "term": {
+            "transaction.transactionType.keyword": "00"
+          }
+        },
+        {
+          "range": {
+            "monitoring.countryDate": {
+              "gte": "2026-06-02T01:00:00",
+              "lte": "2026-06-02T03:00:00",
+              "time_zone": "-05:00"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "sort": [{ "monitoring.countryDate": "asc" }]
+}
+```
+
+**Notas:**
+- Filtrar requerimientos 0100: `customDataLocal.additionalData.request` key=`MSGTYPE` value=`0100` (trama de requerimiento — VD-003).
+- Mostrar trama de respuesta: `_source: ["addendumData.additionalData"]` key=`UNSP` (VD-003).
+- Cambiar `value: "0100"` por `"0120"` para advice request, `"0400"` para reversal request.
+- `transactionType: "00"` = compra. Cambiar a `"01"` para retiros.
+- Para Visa usar `peer01`. Ajustar `gte`/`lte` al rango horario requerido.

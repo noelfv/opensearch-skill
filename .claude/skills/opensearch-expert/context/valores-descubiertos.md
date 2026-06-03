@@ -129,6 +129,24 @@
 
 ---
 
+## [VD-003] Mapeo confirmado: tramas de requerimiento y respuesta ISO8583
+
+> Validado en producción el 2026-06-03.
+
+| Campo | Rol | Valores |
+|-------|-----|---------|
+| `addendumData.additionalData` key=`UNSP` | **Trama de respuesta** | `0110`=auth resp, `0130`=advice resp, `0410`=reversal resp, `0430`=reversal advice resp |
+| `customDataLocal.additionalData[].request` key=`MSGTYPE` | **Trama de requerimiento** | `0100`=auth req, `0120`=advice req, `0400`=reversal req, `0420`=reversal advice req |
+
+**Reglas de uso:**
+- Para **filtrar por tipo de mensaje de respuesta** → `match_phrase` en `addendumData.additionalData.key: "UNSP"` + `addendumData.additionalData.value: "0110"`
+- Para **filtrar por tipo de mensaje de requerimiento** → `match_phrase` en `customDataLocal.additionalData.request.key: "MSGTYPE"` + `customDataLocal.additionalData.request.value: "0100"`
+- Para **mostrar** cualquiera de las tramas → incluir el campo en `_source`
+
+**Descubierto:** 2026-06-03 — confirmado por el equipo.
+
+---
+
 ## environment.card.pan — PAN enmascarado de la tarjeta
 **Campo:** `environment.card.pan`  
 **Formato:** `553650******9713` (primeros 6 + asteriscos + últimos 4)  
